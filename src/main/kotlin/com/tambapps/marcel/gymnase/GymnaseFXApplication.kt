@@ -7,10 +7,12 @@ import javafx.application.Platform
 import javafx.scene.Scene
 import javafx.scene.layout.StackPane
 import javafx.stage.Stage
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.ApplicationListener
 import org.springframework.context.ConfigurableApplicationContext
+import org.springframework.core.io.Resource
 import org.springframework.stereotype.Component
 
 class GymnaseFXApplication: Application() {
@@ -34,7 +36,9 @@ class GymnaseFXApplication: Application() {
 @Component
 class PrimaryStageInitializer(
 	private val sceneProperties: SceneProperties,
-	private val codeArea: MarcelCodeArea
+	private val codeArea: MarcelCodeArea,
+	@Value("classpath:styles/java-keywords.css")
+	private val javaStyleSheet: Resource
 ): ApplicationListener<StageReadyEvent> {
 
 	override fun onApplicationEvent(event: StageReadyEvent) {
@@ -43,6 +47,9 @@ class PrimaryStageInitializer(
 		val scene = Scene(root, sceneProperties.width, sceneProperties.height)
 		stage.scene = scene
 		stage.title = sceneProperties.name
+
+		scene.stylesheets.add(javaStyleSheet.url.toExternalForm());
+
 		stage.show()
 	}
 }
