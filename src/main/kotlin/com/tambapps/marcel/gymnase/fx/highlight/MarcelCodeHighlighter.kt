@@ -13,15 +13,16 @@ class MarcelCodeHighlighter(replCompiler: MarcelReplCompiler) :
   ), CodeHighlighter {
 
     companion object {
+      const val DEFAULT_CLASS = "default"
       val THEME = HighlightTheme(
-        variable = listOf("variable"),
-        string = listOf("string"),
-        stringTemplate = listOf("string_template"),
-        default = listOf(),
-        function = listOf("function"),
-        keyword = listOf("keyword"),
-        comment = listOf("comment"),
-        number = listOf("number"),
+        variable = listOf(DEFAULT_CLASS, "variable"),
+        string = listOf(DEFAULT_CLASS, "string"),
+        stringTemplate = listOf(DEFAULT_CLASS, "string_template"),
+        default = listOf("default"),
+        function = listOf(DEFAULT_CLASS, "function"),
+        keyword = listOf(DEFAULT_CLASS, "keyword"),
+        comment = listOf(DEFAULT_CLASS, "comment"),
+        number = listOf(DEFAULT_CLASS, "number"),
       )
     }
   override fun newBuilder(): StyleSpansBuilder<List<String>> = StyleSpansBuilder<List<String>>()

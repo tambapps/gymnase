@@ -24,6 +24,7 @@ class HighlightedCodeArea(
   private val highlighter = codeHighlighterFactory.create(ProgrammingLanguage.MARCEL)
 
   init {
+    styleClass.add("code-area")
     paragraphGraphicFactory = LineNumberFactory.get(this)
     replaceText("fun void main() {\n    println(\"Hello, Marcel!\")\n}")
     applyHighlighting(highlighter.highlight(text))
