@@ -1,6 +1,7 @@
 package com.tambapps.marcel.gymnase.fx.node
 
-import com.tambapps.marcel.gymnase.fx.highlight.JavaCodeHighlighter
+import com.tambapps.marcel.gymnase.data.ProgrammingLanguage
+import com.tambapps.marcel.gymnase.fx.highlight.CodeHighlighterFactory
 import javafx.concurrent.Task
 import org.fxmisc.richtext.CodeArea
 import org.fxmisc.richtext.LineNumberFactory
@@ -14,16 +15,17 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 
 @Component
-class MarcelCodeArea(
+class HighlightedCodeArea(
   @Qualifier("codeHighlightingExecutor") private val executor: ExecutorService,
+  codeHighlighterFactory: CodeHighlighterFactory
 ): CodeArea(), Closeable {
 
   private var cleanupWhenDone: Subscription
-  private val highlighter = JavaCodeHighlighter()
+  private val highlighter = codeHighlighterFactory.create(ProgrammingLanguage.MARCEL)
 
   init {
     paragraphGraphicFactory = LineNumberFactory.get(this)
-    replaceText("fun main() {\n    println(\"Hello, Marcel!\")\n}")
+    replaceText("fun void main() {\n    println(\"Hello, Marcel!\")\n}")
     applyHighlighting(highlighter.highlight(text))
 
     cleanupWhenDone = multiPlainChanges()

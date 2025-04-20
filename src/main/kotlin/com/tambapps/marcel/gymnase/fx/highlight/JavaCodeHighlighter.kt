@@ -41,7 +41,7 @@ class JavaCodeHighlighter: CodeHighlighter {
     )
   }
 
-  override fun highlight(text: String): StyleSpans<List<String>> {
+  override fun highlight(text: CharSequence): StyleSpans<List<String>> {
     val matcher: Matcher = PATTERN.matcher(text)
     var lastKwEnd = 0
     val spansBuilder = StyleSpansBuilder<List<String>>()

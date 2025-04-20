@@ -1,7 +1,7 @@
 package com.tambapps.marcel.gymnase
 
 import com.tambapps.marcel.gymnase.configuration.SceneProperties
-import com.tambapps.marcel.gymnase.fx.node.MarcelCodeArea
+import com.tambapps.marcel.gymnase.fx.node.HighlightedCodeArea
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.scene.Scene
@@ -36,7 +36,7 @@ class GymnaseFXApplication: Application() {
 @Component
 class PrimaryStageInitializer(
 	private val sceneProperties: SceneProperties,
-	private val codeArea: MarcelCodeArea,
+	private val codeArea: HighlightedCodeArea,
 	@Value("classpath:styles/java-keywords.css")
 	private val javaStyleSheet: Resource
 ): ApplicationListener<StageReadyEvent> {
@@ -48,7 +48,7 @@ class PrimaryStageInitializer(
 		stage.scene = scene
 		stage.title = sceneProperties.name
 
-		scene.stylesheets.add(javaStyleSheet.url.toExternalForm());
+		scene.stylesheets.add(javaStyleSheet.url.toExternalForm())
 
 		stage.show()
 	}
