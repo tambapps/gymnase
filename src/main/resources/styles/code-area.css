@@ -8,7 +8,6 @@
 
 .default {
     -fx-font-family: "JetBrains Mono";
-    -fx-font-size: 15px;
     -fx-fill: white;
 }
 

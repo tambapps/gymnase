@@ -2,6 +2,7 @@ package com.tambapps.marcel.gymnase.fx.node
 
 import com.tambapps.marcel.gymnase.data.ProgrammingLanguage
 import com.tambapps.marcel.gymnase.fx.highlight.CodeHighlighterFactory
+import com.tambapps.marcel.gymnase.service.PreferencesManager
 import javafx.concurrent.Task
 import org.fxmisc.richtext.CodeArea
 import org.fxmisc.richtext.LineNumberFactory
@@ -17,21 +18,21 @@ import java.util.concurrent.ExecutorService
 @Component
 class HighlightedCodeArea(
   @Qualifier("codeHighlightingExecutor") private val executor: ExecutorService,
-  codeHighlighterFactory: CodeHighlighterFactory
+  codeHighlighterFactory: CodeHighlighterFactory,
+  private val preferencesManager: PreferencesManager
 ): CodeArea(), Closeable {
 
   private var cleanupWhenDone: Subscription
   private val highlighter = codeHighlighterFactory.create(ProgrammingLanguage.MARCEL)
 
   init {
-    styleClass.add("code-area")
+    initStyle()
     paragraphGraphicFactory = LineNumberFactory.get(this)
     replaceText("fun void main() {\n    println(\"Hello, Marcel!\")\n}")
     applyHighlighting(highlighter.highlight(text))
 
     cleanupWhenDone = multiPlainChanges()
-      // TODO make it configurable
-      .successionEnds(Duration.ofMillis(500))
+      .successionEnds(Duration.ofMillis(preferencesManager.highlightDelayMillis))
       .retainLatestUntilLater(executor)
       .supplyTask(this::computeHighlightingAsync)
       .awaitLatest(multiPlainChanges())
@@ -60,6 +61,10 @@ class HighlightedCodeArea(
 
   private fun applyHighlighting(highlighting: StyleSpans<List<String>>) {
     setStyleSpans(0, highlighting)
+  }
+
+  private fun initStyle() {
+    style = "-fx-font-size: ${preferencesManager.fontSize}px;"
   }
 
   override fun close() {
