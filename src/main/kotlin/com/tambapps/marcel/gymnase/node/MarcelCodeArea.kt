@@ -1,38 +1,37 @@
-package com.tambapps.marcel.gymnase.fx.node
+package com.tambapps.marcel.gymnase.node
 
-import com.tambapps.marcel.gymnase.data.ProgrammingLanguage
-import com.tambapps.marcel.gymnase.fx.highlight.CodeHighlighterFactory
+import com.tambapps.marcel.gymnase.service.MarcelCodeHighlighter
 import com.tambapps.marcel.gymnase.service.PreferencesManager
 import javafx.concurrent.Task
 import org.fxmisc.richtext.CodeArea
 import org.fxmisc.richtext.LineNumberFactory
 import org.fxmisc.richtext.model.StyleSpans
 import org.reactfx.Subscription
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.stereotype.Component
 import java.io.Closeable
 import java.time.Duration
 import java.util.*
-import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
-@Component
-class HighlightedCodeArea(
-  @Qualifier("codeHighlightingExecutor") private val executor: ExecutorService,
-  codeHighlighterFactory: CodeHighlighterFactory,
-  private val preferencesManager: PreferencesManager
+class MarcelCodeArea(
+  private val highlighter: MarcelCodeHighlighter
 ): CodeArea(), Closeable {
 
+  private val executor = Executors.newSingleThreadExecutor()
   private var cleanupWhenDone: Subscription
-  private val highlighter = codeHighlighterFactory.create(ProgrammingLanguage.MARCEL)
+  private var lastLine = -1
 
   init {
     initStyle()
     paragraphGraphicFactory = LineNumberFactory.get(this)
     replaceText("fun void main() {\n    println(\"Hello, Marcel!\")\n}")
     applyHighlighting(highlighter.highlight(text))
+    setupCurrentLineHighlight()
+    cleanupWhenDone = setupCodeHighlight()
+  }
 
-    cleanupWhenDone = multiPlainChanges()
-      .successionEnds(Duration.ofMillis(preferencesManager.highlightDelayMillis))
+  private fun setupCodeHighlight(): Subscription {
+    return multiPlainChanges()
+      .successionEnds(Duration.ofMillis(PreferencesManager.highlightDelayMillis))
       .retainLatestUntilLater(executor)
       .supplyTask(this::computeHighlightingAsync)
       .awaitLatest(multiPlainChanges())
@@ -64,7 +63,24 @@ class HighlightedCodeArea(
   }
 
   private fun initStyle() {
-    style = "-fx-font-size: ${preferencesManager.fontSize}px;"
+    style = "-fx-font-size: ${PreferencesManager.fontSize}px;"
+  }
+
+  private fun setupCurrentLineHighlight() {
+    caretPositionProperty().addListener { _, _, _ ->
+      val currentParagraph = currentParagraph
+
+      if (currentParagraph != lastLine) {
+        // Remove highlight from previous line
+        if (lastLine >= 0 && lastLine < paragraphs.size) {
+          setParagraphStyle(lastLine, emptyList())
+        }
+
+        // Add style to current line
+        setParagraphStyle(currentParagraph, listOf("current-line"))
+        lastLine = currentParagraph
+      }
+    }
   }
 
   override fun close() {

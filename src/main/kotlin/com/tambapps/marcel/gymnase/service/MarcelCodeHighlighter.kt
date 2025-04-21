@@ -1,4 +1,4 @@
-package com.tambapps.marcel.gymnase.fx.highlight
+package com.tambapps.marcel.gymnase.service
 
 import com.tambapps.marcel.repl.MarcelReplCompiler
 import com.tambapps.marcel.repl.console.AbstractHighlighter
@@ -10,21 +10,21 @@ class MarcelCodeHighlighter(replCompiler: MarcelReplCompiler) :
   AbstractHighlighter<StyleSpans<List<String>>, StyleSpansBuilder<List<String>>, List<String>>(
     replCompiler,
     THEME
-  ), CodeHighlighter {
+  ) {
 
-    companion object {
-      const val DEFAULT_CLASS = "default"
-      val THEME = HighlightTheme(
-        variable = listOf(DEFAULT_CLASS, "variable"),
-        string = listOf(DEFAULT_CLASS, "string"),
-        stringTemplate = listOf(DEFAULT_CLASS, "string_template"),
-        default = listOf("default"),
-        function = listOf(DEFAULT_CLASS, "function"),
-        keyword = listOf(DEFAULT_CLASS, "keyword"),
-        comment = listOf(DEFAULT_CLASS, "comment"),
-        number = listOf(DEFAULT_CLASS, "number"),
-      )
-    }
+  companion object {
+    const val DEFAULT_CLASS = "default"
+    val THEME = HighlightTheme(
+      variable = listOf(DEFAULT_CLASS, "variable"),
+      string = listOf(DEFAULT_CLASS, "string"),
+      stringTemplate = listOf(DEFAULT_CLASS, "string_template"),
+      default = listOf("default"),
+      function = listOf(DEFAULT_CLASS, "function"),
+      keyword = listOf(DEFAULT_CLASS, "keyword"),
+      comment = listOf(DEFAULT_CLASS, "comment"),
+      number = listOf(DEFAULT_CLASS, "number"),
+    )
+  }
   override fun newBuilder(): StyleSpansBuilder<List<String>> = StyleSpansBuilder<List<String>>()
 
   override fun build(builder: StyleSpansBuilder<List<String>>): StyleSpans<List<String>> = builder.create()

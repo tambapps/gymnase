@@ -1,17 +1,17 @@
 package com.tambapps.marcel.gymnase.service
 
-import org.springframework.stereotype.Service
+import com.tambapps.marcel.gymnase.GymnaseApplication
 import java.util.prefs.Preferences
+import kotlin.let
+import kotlin.text.split
 
-@Service
-class PreferencesManager(
-  private val preferences: Preferences
-) {
-  private companion object {
-    const val CODE_FONT_SIZE = "CODE_FONT_SIZE"
-    const val HIGHLIGHT_DELAY = "HIGHLIGHT_DELAY"
-    const val SCENE_SIZE = "SCENE_SIZE"
-  }
+object PreferencesManager {
+
+  private const val CODE_FONT_SIZE = "CODE_FONT_SIZE"
+  private const val HIGHLIGHT_DELAY = "HIGHLIGHT_DELAY"
+  private const val SCENE_SIZE = "SCENE_SIZE"
+
+  private val preferences: Preferences = Preferences.userNodeForPackage(GymnaseApplication::class.java)
 
   val fontSize: Int
     get() = preferences.getInt(CODE_FONT_SIZE, 15)
@@ -21,9 +21,7 @@ class PreferencesManager(
 
   var sceneSize: Pair<Double, Double>
     get() = getDoublePair(SCENE_SIZE) ?: Pair(800.0, 800.0)
-    set(value) {
-      if (value != null) putDoublePair(SCENE_SIZE, value.first, value.second)
-    }
+    set(value) = putDoublePair(SCENE_SIZE, value.first, value.second)
 
   private fun getDoublePair(key: String): Pair<Double, Double>? = preferences.get(key, null)?.let {
     val fields = it.split("|")
