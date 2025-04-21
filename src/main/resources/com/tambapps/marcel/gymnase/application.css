@@ -34,6 +34,12 @@
     -fx-stroke: white;
 }
 
+/* line number style */
+.lineno {
+    -fx-background-color: #323232; /* subtle light overlay */
+    -fx-font-family: "JetBrains Mono";
+}
+
 /*
  * code highlight classes
  */
