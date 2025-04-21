@@ -20,6 +20,7 @@ module com.tambapps.marcel.gymnase {
   requires marcel.stdlib;
 
   opens com.tambapps.marcel.gymnase to javafx.fxml;
+  opens com.tambapps.marcel.gymnase.controller to javafx.fxml;
   opens com.tambapps.marcel.gymnase.node to javafx.fxml;
   opens com.tambapps.marcel.gymnase.service to javafx.fxml;
   exports com.tambapps.marcel.gymnase;

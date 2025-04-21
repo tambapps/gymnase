@@ -1,6 +1,6 @@
 package com.tambapps.marcel.gymnase.node
 
-import com.tambapps.marcel.gymnase.service.MarcelCodeHighlighter
+import com.tambapps.marcel.gymnase.service.MarcelCodeHighlighterFactory
 import com.tambapps.marcel.gymnase.service.PreferencesManager
 import javafx.concurrent.Task
 import org.fxmisc.richtext.CodeArea
@@ -12,13 +12,12 @@ import java.time.Duration
 import java.util.*
 import java.util.concurrent.Executors
 
-class MarcelCodeArea(
-  private val highlighter: MarcelCodeHighlighter
-): CodeArea(), Closeable {
+class MarcelCodeArea: CodeArea(), Closeable {
 
   private val executor = Executors.newSingleThreadExecutor()
   private var cleanupWhenDone: Subscription
   private var lastLine = -1
+  private val highlighter = MarcelCodeHighlighterFactory.create()
 
   init {
     initStyle()
