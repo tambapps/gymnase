@@ -20,9 +20,35 @@
   </properties>
 
   <dependencies>
+    <!-- Marcel -->
     <dependency>
       <groupId>com.tambapps.marcel</groupId>
       <artifactId>marcel-repl</artifactId>
+      <version>${marcel.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.tambapps.marcel</groupId>
+      <artifactId>marcel-clargs</artifactId>
+      <version>${marcel.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.tambapps.marcel</groupId>
+      <artifactId>marcel-extensions</artifactId>
+      <version>${marcel.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.tambapps.marcel</groupId>
+      <artifactId>marcel-json</artifactId>
+      <version>${marcel.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.tambapps.marcel</groupId>
+      <artifactId>marcel-yaml</artifactId>
+      <version>${marcel.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.tambapps.marcel</groupId>
+      <artifactId>dumbbell</artifactId>
       <version>${marcel.version}</version>
     </dependency>
 
