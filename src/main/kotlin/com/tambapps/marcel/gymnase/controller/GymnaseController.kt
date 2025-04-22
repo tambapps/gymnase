@@ -10,6 +10,9 @@ import javafx.fxml.FXMLLoader
 import javafx.scene.control.MenuBar
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
+import javafx.stage.FileChooser
+import javafx.stage.Stage
+import java.io.File
 
 class GymnaseController: ListChangeListener<Tab> {
 
@@ -21,6 +24,10 @@ class GymnaseController: ListChangeListener<Tab> {
   private lateinit var tabPane: TabPane
   @FXML
   private lateinit var menuBar: MenuBar
+  private val stage: Stage
+    get() = tabPane.scene.window as Stage
+  private val currentTab: Tab
+    get() = tabPane.selectionModel.selectedItem
 
   @FXML
   fun initialize() {
@@ -29,12 +36,12 @@ class GymnaseController: ListChangeListener<Tab> {
     updateTabHeaderVisibility(tabPane.tabs)
   }
 
-  private fun createTab(): Tab = Tab().apply {
+  private fun createTab(file: File? = null): Tab = Tab().apply {
     text = "New file"
     val loader = FXMLLoader(GymnaseApplication::class.java.getResource("code-area-view.fxml"))
     val codeArea = loader.load<MarcelCodeArea>()
     val controller = loader.getController<MarcelCodeAreaController>()
-    controller.tab = this
+    controller.initialize(this, file)
     content = codeArea
   }
 
@@ -44,11 +51,25 @@ class GymnaseController: ListChangeListener<Tab> {
   }
 
   @FXML
+  fun openFile() {
+    val fileChooser = FileChooser().apply {
+      title = "Open Marcel File"
+      extensionFilters.addAll(
+        FileChooser.ExtensionFilter("Marcel Files", "*.mcl", "*.marcel"),
+        FileChooser.ExtensionFilter("All Files", "*.*")
+      )
+    }
+    val file = fileChooser.showOpenDialog(stage) ?: return
+    val newTab = createTab(file)
+    tabPane.tabs.add(newTab)
+    tabPane.selectionModel.select(newTab)
+  }
+
+  @FXML
   fun close() {
     if (tabPane.tabs.size <= 1) {
       Platform.exit()
     } else {
-      val currentTab = tabPane.selectionModel.selectedItem
       tabPane.tabs.remove(currentTab)
     }
   }
