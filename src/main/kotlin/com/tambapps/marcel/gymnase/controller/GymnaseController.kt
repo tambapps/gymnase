@@ -16,8 +16,16 @@ import java.io.File
 
 class GymnaseController: ListChangeListener<Tab> {
 
-  private companion object {
-    const val HIDE_TAB_HEADER_CLASS = "hide-tab-header"
+  companion object {
+    private const val HIDE_TAB_HEADER_CLASS = "hide-tab-header"
+
+    fun newFileChooser() = FileChooser().apply {
+      title = "Open Marcel File"
+      extensionFilters.addAll(
+        FileChooser.ExtensionFilter("Marcel Files", "*.mcl", "*.marcel"),
+        //FileChooser.ExtensionFilter("All Files", "*.*")
+      )
+    }
   }
 
   @FXML
@@ -28,6 +36,7 @@ class GymnaseController: ListChangeListener<Tab> {
     get() = tabPane.scene.window as Stage
   private val currentTab: Tab
     get() = tabPane.selectionModel.selectedItem
+  private val tabControllerMap: MutableMap<Tab, MarcelCodeAreaController> = mutableMapOf()
 
   @FXML
   fun initialize() {
@@ -41,6 +50,7 @@ class GymnaseController: ListChangeListener<Tab> {
     val loader = FXMLLoader(GymnaseApplication::class.java.getResource("code-area-view.fxml"))
     val codeArea = loader.load<MarcelCodeArea>()
     val controller = loader.getController<MarcelCodeAreaController>()
+    tabControllerMap[this] = controller
     controller.initialize(this, file)
     content = codeArea
   }
@@ -52,13 +62,7 @@ class GymnaseController: ListChangeListener<Tab> {
 
   @FXML
   fun openFile() {
-    val fileChooser = FileChooser().apply {
-      title = "Open Marcel File"
-      extensionFilters.addAll(
-        FileChooser.ExtensionFilter("Marcel Files", "*.mcl", "*.marcel"),
-        FileChooser.ExtensionFilter("All Files", "*.*")
-      )
-    }
+    val fileChooser = newFileChooser()
     val file = fileChooser.showOpenDialog(stage) ?: return
     val newTab = createTab(file)
     tabPane.tabs.add(newTab)
@@ -70,8 +74,15 @@ class GymnaseController: ListChangeListener<Tab> {
     if (tabPane.tabs.size <= 1) {
       Platform.exit()
     } else {
+      val currentTab = currentTab
+      tabControllerMap.remove(currentTab)
       tabPane.tabs.remove(currentTab)
     }
+  }
+
+  @FXML
+  fun save() {
+    tabControllerMap[currentTab]?.save()
   }
 
   private fun updateTabHeaderVisibility(tabs: ObservableList<out Tab>) {

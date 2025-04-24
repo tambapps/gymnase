@@ -6,10 +6,13 @@ import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
 import javafx.fxml.FXML
 import javafx.scene.control.Tab
+import javafx.stage.Stage
 import java.io.File
 
 class MarcelCodeAreaController {
 
+  private val stage: Stage
+    get() = codeArea.scene.window as Stage
   private lateinit var tab: Tab
   @FXML
   private lateinit var codeArea: MarcelCodeArea
@@ -23,11 +26,15 @@ class MarcelCodeAreaController {
     if (file != null) {
       fileProperty.value = file
       codeArea.replaceText(file.readText())
-      codeArea.textProperty().apply {
-        addListener(TextChangedListener(this))
-      }
+      listenTextChanges()
     } else {
       updateTabText()
+    }
+  }
+
+  private fun listenTextChanges() {
+    codeArea.textProperty().apply {
+      addListener(TextChangedListener(this))
     }
   }
 
@@ -36,6 +43,22 @@ class MarcelCodeAreaController {
       file != null && dirty -> "${file.name}*"
       file != null && !dirty -> "${file.name}"
       else -> "Untitled"
+    }
+  }
+
+  fun save() {
+    val file = fileProperty.value
+    if (file != null) {
+      file.writeText(codeArea.text)
+      dirty = false
+      updateTabText(file)
+      listenTextChanges()
+    } else {
+      val file = GymnaseController.newFileChooser().showSaveDialog(stage) ?: return
+      fileProperty.value = file
+      file.writeText(codeArea.text)
+      listenTextChanges()
+      dirty = false
     }
   }
 

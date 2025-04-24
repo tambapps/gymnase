@@ -15,6 +15,7 @@
               <MenuItem mnemonicParsing="false" onAction="#newTab" text="New" />
                   <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open" />
                   <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
+                  <MenuItem mnemonicParsing="false" onAction="#save" text="Save" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
