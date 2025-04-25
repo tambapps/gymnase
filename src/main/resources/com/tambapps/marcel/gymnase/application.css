@@ -49,23 +49,32 @@
 }
 
 .keyword {
-    -fx-fill: #c586c0;
+    -fx-fill: #ce9178;
 }
+
+.string_template {
+    -fx-fill: #ce9178;
+}
+
+.number {
+    -fx-fill: #6a99ff;
+}
+
 
 .function {
     -fx-fill: #dcdcaa;
 }
 
 .string {
-    -fx-fill: #ce9178;
+    -fx-fill: #6a9955;
 }
 
 .variable {
-    -fx-fill: #c586c0;
+    -fx-fill: #c792ea;
 }
 
 .comment {
-    -fx-fill: #6a9955;
+    -fx-fill: #808080;
 }
 
 
