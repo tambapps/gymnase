@@ -1,5 +1,6 @@
 package com.tambapps.marcel.gymnase
 
+import com.tambapps.marcel.gymnase.service.ExecutorServiceFactory
 import com.tambapps.marcel.gymnase.service.PreferencesManager
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
@@ -23,6 +24,7 @@ class GymnaseApplication : Application() {
 
   override fun stop() {
     PreferencesManager.sceneSize = stage.width to stage.height
+    ExecutorServiceFactory.dispose()
   }
 }
 

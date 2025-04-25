@@ -1,6 +1,6 @@
 package com.tambapps.marcel.gymnase.node
 
-import com.tambapps.marcel.gymnase.GymnaseApplication
+import com.tambapps.marcel.gymnase.service.ExecutorServiceFactory
 import com.tambapps.marcel.gymnase.service.MarcelCodeHighlighterFactory
 import com.tambapps.marcel.gymnase.service.PreferencesManager
 import javafx.concurrent.Task
@@ -8,15 +8,12 @@ import org.fxmisc.richtext.CodeArea
 import org.fxmisc.richtext.LineNumberFactory
 import org.fxmisc.richtext.model.StyleSpans
 import org.reactfx.Subscription
-import java.io.Closeable
 import java.time.Duration
 import java.util.*
-import java.util.concurrent.Executors
 
-class MarcelCodeArea: CodeArea(), Closeable {
+class MarcelCodeArea: CodeArea() {
 
-  private val executor = Executors.newSingleThreadExecutor()
-  private var cleanupWhenDone: Subscription
+  private val executor = ExecutorServiceFactory.newSingleThreadExecutor()
   private var lastLine = -1
   private val highlighter = MarcelCodeHighlighterFactory.create()
 
@@ -26,7 +23,7 @@ class MarcelCodeArea: CodeArea(), Closeable {
     replaceText("fun void main() {\n    println(\"Hello, Marcel!\")\n}")
     applyHighlighting(highlighter.highlight(text))
     setupCurrentLineHighlight()
-    cleanupWhenDone = setupCodeHighlight()
+    setupCodeHighlight()
   }
 
   private fun setupCodeHighlight(): Subscription {
@@ -82,10 +79,5 @@ class MarcelCodeArea: CodeArea(), Closeable {
         lastLine = currentParagraph
       }
     }
-  }
-
-  override fun close() {
-    cleanupWhenDone.unsubscribe()
-    executor.shutdown()
   }
 }
