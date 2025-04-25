@@ -1,5 +1,6 @@
 package com.tambapps.marcel.gymnase
 
+import com.tambapps.marcel.gymnase.controller.GymnaseController
 import com.tambapps.marcel.gymnase.service.ExecutorServiceFactory
 import com.tambapps.marcel.gymnase.service.PreferencesManager
 import javafx.application.Application
@@ -13,13 +14,16 @@ class GymnaseApplication : Application() {
   private lateinit var stage: Stage
 
   override fun start(stage: Stage) {
-    val root = FXMLLoader.load<Parent>(GymnaseApplication::class.java.getResource("gymnase-view.fxml"))
+    this.stage = stage
+    val loader = FXMLLoader(GymnaseApplication::class.java.getResource("gymnase-view.fxml"))
+    val root = loader.load<Parent>()
+    val controller = loader.getController<GymnaseController>()
     val (width, height) = PreferencesManager.sceneSize
     val scene = Scene(root, width, height)
+    GymnaseKeyboardShortcuts.configure(scene, controller)
     stage.title = "Gymnase"
     stage.scene = scene
     stage.show()
-    this.stage = stage
   }
 
   override fun stop() {
