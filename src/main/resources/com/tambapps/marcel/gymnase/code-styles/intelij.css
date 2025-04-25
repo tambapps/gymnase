@@ -1,0 +1,33 @@
+.default {
+    -fx-font-family: "JetBrains Mono";
+    -fx-fill: white;
+}
+
+.keyword {
+    -fx-fill: #ce9178;
+}
+
+.string_template {
+    -fx-fill: #ce9178;
+}
+
+.number {
+    -fx-fill: #6a99ff;
+}
+
+.function {
+    -fx-fill: #dcdcaa;
+}
+
+.string {
+    -fx-fill: #6a9955;
+}
+
+.variable {
+    -fx-fill: #c792ea;
+}
+
+.comment {
+    -fx-fill: #808080;
+}
+

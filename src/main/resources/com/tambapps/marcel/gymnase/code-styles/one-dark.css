@@ -1,0 +1,33 @@
+.default {
+    -fx-font-family: "JetBrains Mono";
+    -fx-fill: white;
+}
+
+.keyword {
+    -fx-fill: #e06c75; /* rouge rosé */
+}
+
+.string_template {
+    -fx-fill: #98c379; /* vert clair */
+}
+
+.number {
+    -fx-fill: #61afef; /* bleu clair */
+
+}
+
+.function {
+    -fx-fill: #d19a66; /* orange */
+}
+
+.string {
+    -fx-fill: #98c379; /* vert clair */
+}
+
+.variable {
+    -fx-fill: #c678dd; /* violet vif */
+}
+
+.comment {
+    -fx-fill: #5c6370; /* gris bleuté */
+}

@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tambapps.marcel.gymnase.controller.GymnaseController">
+<VBox xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tambapps.marcel.gymnase.controller.GymnaseController" stylesheets="@application.css">
    <children>
       <MenuBar fx:id="menuBar" useSystemMenuBar="true">
         <menus>
@@ -30,6 +30,6 @@
           </Menu>
         </menus>
       </MenuBar>
-      <TabPane fx:id="tabPane" stylesheets="@application.css" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />
+      <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />
    </children>
 </VBox>

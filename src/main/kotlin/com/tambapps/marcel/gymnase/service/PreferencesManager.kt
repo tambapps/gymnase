@@ -8,6 +8,7 @@ import kotlin.text.split
 object PreferencesManager {
 
   private const val CODE_FONT_SIZE = "CODE_FONT_SIZE"
+  private const val CODE_STYLE_SHEET = "CODE_STYLE_SHEET"
   private const val HIGHLIGHT_DELAY = "HIGHLIGHT_DELAY"
   private const val SCENE_SIZE = "SCENE_SIZE"
 
@@ -15,6 +16,9 @@ object PreferencesManager {
 
   val fontSize: Int
     get() = preferences.getInt(CODE_FONT_SIZE, 15)
+
+  val codeStyleSheet: String
+    get() = GymnaseApplication::class.java.getResource(preferences.get(CODE_STYLE_SHEET, "code-styles/one-dark.css"))!!.toExternalForm()
 
   val highlightDelayMillis: Long
     get() = preferences.getLong(HIGHLIGHT_DELAY, 100L)

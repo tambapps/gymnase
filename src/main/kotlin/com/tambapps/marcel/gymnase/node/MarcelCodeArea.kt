@@ -1,5 +1,6 @@
 package com.tambapps.marcel.gymnase.node
 
+import com.tambapps.marcel.gymnase.GymnaseApplication
 import com.tambapps.marcel.gymnase.service.MarcelCodeHighlighterFactory
 import com.tambapps.marcel.gymnase.service.PreferencesManager
 import javafx.concurrent.Task
@@ -63,6 +64,7 @@ class MarcelCodeArea: CodeArea(), Closeable {
 
   private fun initStyle() {
     style = "-fx-font-size: ${PreferencesManager.fontSize}px;"
+    stylesheets.add(PreferencesManager.codeStyleSheet)
   }
 
   private fun setupCurrentLineHighlight() {
