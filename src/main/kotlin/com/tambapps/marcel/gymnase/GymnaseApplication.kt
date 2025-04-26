@@ -18,7 +18,7 @@ class GymnaseApplication : Application() {
     val loader = FXMLLoader(GymnaseApplication::class.java.getResource("gymnase-view.fxml"))
     val root = loader.load<Parent>()
     val controller = loader.getController<GymnaseController>()
-    val (width, height) = PreferencesManager.sceneSize
+    val (width, height) = PreferencesManager.sceneSizeProperty.value
     val scene = Scene(root, width, height)
     GymnaseKeyboardShortcuts.configure(scene, controller)
     stage.title = "Gymnase"
@@ -28,7 +28,7 @@ class GymnaseApplication : Application() {
 
   override fun stop() {
     if (stage.width >= 100 && stage.height >= 100) {
-      PreferencesManager.sceneSize = stage.width to stage.height
+      PreferencesManager.sceneSizeProperty.value = stage.width to stage.height
     }
     ExecutorServiceFactory.dispose()
   }
