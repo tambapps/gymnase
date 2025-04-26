@@ -19,7 +19,7 @@ class MarcelCodeArea: CodeArea() {
 
   init {
     initStyle()
-    paragraphGraphicFactory = LineNumberFactory.get(this)
+    showLinesNumber()
     replaceText("fun void main() {\n    println(\"Hello, Marcel!\")\n}")
     applyHighlighting(highlighter.highlight(text))
     setupCurrentLineHighlight()
@@ -79,5 +79,9 @@ class MarcelCodeArea: CodeArea() {
         lastLine = currentParagraph
       }
     }
+  }
+
+  fun showLinesNumber(enabled: Boolean = true) {
+    paragraphGraphicFactory = if (enabled) LineNumberFactory.get(this) else null
   }
 }

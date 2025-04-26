@@ -3,6 +3,7 @@ package com.tambapps.marcel.gymnase.service
 import com.tambapps.marcel.gymnase.GymnaseApplication
 import java.util.prefs.Preferences
 import kotlin.let
+import kotlin.reflect.KProperty
 import kotlin.text.split
 
 object PreferencesManager {
@@ -11,28 +12,64 @@ object PreferencesManager {
   private const val CODE_STYLE_SHEET = "CODE_STYLE_SHEET"
   private const val HIGHLIGHT_DELAY = "HIGHLIGHT_DELAY"
   private const val SCENE_SIZE = "SCENE_SIZE"
+  private const val SHOW_LINES_NUMBER = "SHOW_LINES_NUMBER"
 
   private val preferences: Preferences = Preferences.userNodeForPackage(GymnaseApplication::class.java)
 
-  val fontSize: Int
-    get() = preferences.getInt(CODE_FONT_SIZE, 15)
+  var fontSize by PreferenceIntProperty(CODE_FONT_SIZE, 15)
+
+  var showLinesNumber by PreferenceBooleanProperty(SHOW_LINES_NUMBER, true)
 
   val codeStyleSheet: String
     get() = GymnaseApplication::class.java.getResource(preferences.get(CODE_STYLE_SHEET, "code-styles/one-dark.css"))!!.toExternalForm()
 
-  val highlightDelayMillis: Long
-    get() = preferences.getLong(HIGHLIGHT_DELAY, 100L)
+  var highlightDelayMillis by PreferenceLongProperty(HIGHLIGHT_DELAY, 100L)
 
-  var sceneSize: Pair<Double, Double>
-    get() = getDoublePair(SCENE_SIZE) ?: Pair(800.0, 800.0)
-    set(value) = putDoublePair(SCENE_SIZE, value.first, value.second)
+  var sceneSize by PreferenceProperty(SCENE_SIZE, Pair(800.0, 800.0),
+    composer = { pair -> "${pair.first}|${pair.second}" }, parser = { s ->
+      s.split("|").let { Pair(it[0].toDouble(), it[1].toDouble()) }
+    })
 
-  private fun getDoublePair(key: String): Pair<Double, Double>? = preferences.get(key, null)?.let {
-    val fields = it.split("|")
-    Pair(fields[0].toDouble(), fields[1].toDouble())
+  private class PreferenceBooleanProperty(
+    private val key: String,
+    private val defaultValue: Boolean,
+  ) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>) = preferences.getBoolean(key, defaultValue)
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Boolean) = preferences.putBoolean(key, value)
   }
 
-  private fun putDoublePair(key: String, d1: Double, d2: Double) {
-    preferences.put(key, "$d1|$d2")
+  private class PreferenceLongProperty(
+    private val key: String,
+    private val defaultValue: Long,
+  ) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>) = preferences.getLong(key, defaultValue)
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Long) = preferences.putLong(key, value)
+  }
+
+  private class PreferenceIntProperty(
+    private val key: String,
+    private val defaultValue: Int,
+  ) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): Int {
+      return preferences.getInt(key, defaultValue)
+    }
+
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) {
+      preferences.putInt(key, value)
+    }
+  }
+
+  private class PreferenceProperty<T>(
+    private val key: String,
+    private val defaultValue: T,
+    private val parser: (String) -> T,
+    private val composer: (T) -> String,
+  ) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>) = preferences.get(key, null)?.let(parser::invoke) ?: defaultValue
+
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+      preferences.put(key, composer.invoke(value))
+    }
   }
 }
+

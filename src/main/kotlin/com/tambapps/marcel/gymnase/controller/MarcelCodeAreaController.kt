@@ -32,6 +32,10 @@ class MarcelCodeAreaController {
     }
   }
 
+  fun showLinesNumber(enabled: Boolean) {
+    codeArea.showLinesNumber(enabled)
+  }
+
   private fun listenTextChanges() {
     codeArea.textProperty().apply {
       addListener(TextChangedListener(this))

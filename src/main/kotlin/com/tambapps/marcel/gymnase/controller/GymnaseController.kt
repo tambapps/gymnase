@@ -2,12 +2,14 @@ package com.tambapps.marcel.gymnase.controller
 
 import com.tambapps.marcel.gymnase.GymnaseApplication
 import com.tambapps.marcel.gymnase.node.MarcelCodeArea
+import com.tambapps.marcel.gymnase.service.PreferencesManager
 import javafx.application.Platform
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
+import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
-import javafx.scene.control.MenuBar
+import javafx.scene.control.CheckMenuItem
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.stage.FileChooser
@@ -31,7 +33,7 @@ class GymnaseController: ListChangeListener<Tab> {
   @FXML
   private lateinit var tabPane: TabPane
   @FXML
-  private lateinit var menuBar: MenuBar
+  private lateinit var showLinesNumberMenuItem: CheckMenuItem
   private val stage: Stage
     get() = tabPane.scene.window as Stage
   private val currentTab: Tab
@@ -41,8 +43,15 @@ class GymnaseController: ListChangeListener<Tab> {
   @FXML
   fun initialize() {
     tabPane.tabs.addListener(this)
+    showLinesNumberMenuItem.isSelected = PreferencesManager.showLinesNumber
     newTab()
     updateTabHeaderVisibility(tabPane.tabs)
+  }
+
+  @FXML
+  private fun onShowLinesNumber() {
+    PreferencesManager.showLinesNumber = showLinesNumberMenuItem.isSelected
+    tabControllerMap.values.forEach { controller -> controller.showLinesNumber(showLinesNumberMenuItem.isSelected) }
   }
 
   private fun createTab(file: File? = null): Tab = Tab().apply {
@@ -50,6 +59,7 @@ class GymnaseController: ListChangeListener<Tab> {
     val loader = FXMLLoader(GymnaseApplication::class.java.getResource("code-area-view.fxml"))
     val codeArea = loader.load<MarcelCodeArea>()
     val controller = loader.getController<MarcelCodeAreaController>()
+    controller.showLinesNumber(showLinesNumberMenuItem.isSelected)
     tabControllerMap[this] = controller
     controller.initialize(this, file)
     content = codeArea
