@@ -47,6 +47,7 @@ class GymnaseController: ListChangeListener<Tab> {
   fun initialize() {
     tabPane.tabs.addListener(this)
     showLinesNumberMenuItem.isSelected = PreferencesManager.showLinesNumberProperty.value
+    highlightSelectedLineMenuItem.isSelected = PreferencesManager.highlightSelectedLineProperty.value
     newTab()
     updateTabHeaderVisibility(tabPane.tabs)
   }
@@ -58,7 +59,7 @@ class GymnaseController: ListChangeListener<Tab> {
 
   @FXML
   private fun onHighlightSelectedLine() {
-    // TODO
+    PreferencesManager.highlightSelectedLineProperty.value = highlightSelectedLineMenuItem.isSelected
   }
 
   private fun createTab(file: File? = null): Tab = Tab().apply {

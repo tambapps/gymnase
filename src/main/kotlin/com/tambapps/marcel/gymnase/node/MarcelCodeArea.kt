@@ -3,6 +3,8 @@ package com.tambapps.marcel.gymnase.node
 import com.tambapps.marcel.gymnase.service.ExecutorServiceFactory
 import com.tambapps.marcel.gymnase.service.MarcelCodeHighlighterFactory
 import com.tambapps.marcel.gymnase.service.PreferencesManager
+import javafx.beans.value.ChangeListener
+import javafx.beans.value.ObservableValue
 import javafx.concurrent.Task
 import org.fxmisc.richtext.CodeArea
 import org.fxmisc.richtext.LineNumberFactory
@@ -16,6 +18,19 @@ class MarcelCodeArea: CodeArea() {
   private val executor = ExecutorServiceFactory.newSingleThreadExecutor()
   private var lastLine = -1
   private val highlighter = MarcelCodeHighlighterFactory.create()
+  private val currentLineHighlightListener = ChangeListener<Int> { _, _, _ ->
+    val currentParagraph = currentParagraph
+    if (currentParagraph != lastLine) {
+      // Remove highlight from previous line
+      if (lastLine >= 0 && lastLine < paragraphs.size) {
+        setParagraphStyle(lastLine, emptyList())
+      }
+      // Add style to current line
+      setParagraphStyle(currentParagraph, listOf("current-line"))
+      lastLine = currentParagraph
+    }
+  }
+
 
   init {
     initStyle()
@@ -68,18 +83,16 @@ class MarcelCodeArea: CodeArea() {
   }
 
   private fun setupCurrentLineHighlight() {
-    caretPositionProperty().addListener { _, _, _ ->
-      val currentParagraph = currentParagraph
 
-      if (currentParagraph != lastLine) {
-        // Remove highlight from previous line
-        if (lastLine >= 0 && lastLine < paragraphs.size) {
+    PreferencesManager.highlightSelectedLineProperty.addListenerNow { _, _, highlightSelectedLine ->
+      if (highlightSelectedLine) {
+        caretPositionProperty().addListener(currentLineHighlightListener)
+      } else {
+        if (lastLine >= 0) {
           setParagraphStyle(lastLine, emptyList())
+          lastLine = -1
         }
-
-        // Add style to current line
-        setParagraphStyle(currentParagraph, listOf("current-line"))
-        lastLine = currentParagraph
+        caretPositionProperty().removeListener(currentLineHighlightListener)
       }
     }
   }
