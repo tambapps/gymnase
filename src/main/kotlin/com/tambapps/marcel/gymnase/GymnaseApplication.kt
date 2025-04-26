@@ -27,7 +27,9 @@ class GymnaseApplication : Application() {
   }
 
   override fun stop() {
-    PreferencesManager.sceneSize = stage.width to stage.height
+    if (stage.width >= 100 && stage.height >= 100) {
+      PreferencesManager.sceneSize = stage.width to stage.height
+    }
     ExecutorServiceFactory.dispose()
   }
 }
