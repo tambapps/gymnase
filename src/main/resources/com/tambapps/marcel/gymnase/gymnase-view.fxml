@@ -27,6 +27,7 @@
             <Menu mnemonicParsing="false" text="View">
                <items>
                   <CheckMenuItem fx:id="showLinesNumberMenuItem" mnemonicParsing="false" onAction="#onShowLinesNumber" text="Show line number" />
+                  <CheckMenuItem fx:id="highlightSelectedLineMenuItem" mnemonicParsing="false" onAction="#onHighlightSelectedLine" text="Highlight selected line" />
                </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Help">

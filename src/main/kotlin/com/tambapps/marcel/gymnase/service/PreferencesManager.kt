@@ -1,6 +1,9 @@
 package com.tambapps.marcel.gymnase.service
 
 import com.tambapps.marcel.gymnase.GymnaseApplication
+import com.tambapps.marcel.gymnase.property.BooleanPreferencesProperty
+import com.tambapps.marcel.gymnase.property.IntPreferencesProperty
+import com.tambapps.marcel.gymnase.property.LongPreferencesProperty
 import java.util.prefs.Preferences
 import kotlin.let
 import kotlin.reflect.KProperty
@@ -16,15 +19,16 @@ object PreferencesManager {
 
   private val preferences: Preferences = Preferences.userNodeForPackage(GymnaseApplication::class.java)
 
-  var fontSize by PreferenceIntProperty(CODE_FONT_SIZE, 15)
+  val fontSizeProperty = IntPreferencesProperty(preferences, CODE_FONT_SIZE, 15)
 
-  var showLinesNumber by PreferenceBooleanProperty(SHOW_LINES_NUMBER, true)
+  val showLinesNumberProperty = BooleanPreferencesProperty(preferences, SHOW_LINES_NUMBER, true)
 
   val codeStyleSheet: String
     get() = GymnaseApplication::class.java.getResource(preferences.get(CODE_STYLE_SHEET, "code-styles/one-dark.css"))!!.toExternalForm()
 
-  var highlightDelayMillis by PreferenceLongProperty(HIGHLIGHT_DELAY, 100L)
+  val highlightDelayMillisProperty = LongPreferencesProperty(preferences, HIGHLIGHT_DELAY, 100L)
 
+  // TODO do others
   var sceneSize by PreferenceProperty(SCENE_SIZE, Pair(800.0, 800.0),
     composer = { pair -> "${pair.first}|${pair.second}" }, parser = { s ->
       s.split("|").let { Pair(it[0].toDouble(), it[1].toDouble()) }
@@ -55,6 +59,7 @@ object PreferencesManager {
     }
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) {
+      preferences.addPreferenceChangeListener { event -> event.newValue }
       preferences.putInt(key, value)
     }
   }

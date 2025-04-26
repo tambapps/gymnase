@@ -19,7 +19,7 @@ class MarcelCodeArea: CodeArea() {
 
   init {
     initStyle()
-    showLinesNumber()
+    setupLinesNumberDisplay()
     replaceText("fun void main() {\n    println(\"Hello, Marcel!\")\n}")
     applyHighlighting(highlighter.highlight(text))
     setupCurrentLineHighlight()
@@ -28,7 +28,8 @@ class MarcelCodeArea: CodeArea() {
 
   private fun setupCodeHighlight(): Subscription {
     return multiPlainChanges()
-      .successionEnds(Duration.ofMillis(PreferencesManager.highlightDelayMillis))
+      // flemme to listen for changes
+      .successionEnds(Duration.ofMillis(PreferencesManager.highlightDelayMillisProperty.value))
       .retainLatestUntilLater(executor)
       .supplyTask(this::computeHighlightingAsync)
       .awaitLatest(multiPlainChanges())
@@ -60,7 +61,9 @@ class MarcelCodeArea: CodeArea() {
   }
 
   private fun initStyle() {
-    style = "-fx-font-size: ${PreferencesManager.fontSize}px;"
+    PreferencesManager.fontSizeProperty.addListenerNow { _, _, fontSize ->
+      style = "-fx-font-size: ${fontSize}px;"
+    }
     stylesheets.add(PreferencesManager.codeStyleSheet)
   }
 
@@ -81,7 +84,9 @@ class MarcelCodeArea: CodeArea() {
     }
   }
 
-  fun showLinesNumber(enabled: Boolean = true) {
-    paragraphGraphicFactory = if (enabled) LineNumberFactory.get(this) else null
+  fun setupLinesNumberDisplay() {
+    PreferencesManager.showLinesNumberProperty.addListenerNow { _, _, showLinesNumber ->
+      paragraphGraphicFactory = if (showLinesNumber) LineNumberFactory.get(this) else null
+    }
   }
 }
