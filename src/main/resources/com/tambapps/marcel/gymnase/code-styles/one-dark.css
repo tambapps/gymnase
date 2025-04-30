@@ -4,30 +4,33 @@
 }
 
 .keyword {
-    -fx-fill: #e06c75; /* rouge rosé */
+    -fx-fill: #e06c75;
 }
 
 .string_template {
-    -fx-fill: #98c379; /* vert clair */
+    -fx-fill: #98c379;
 }
 
 .number {
-    -fx-fill: #61afef; /* bleu clair */
+    -fx-fill: #61afef;
+}
 
+.annotation {
+    -fx-fill: #dcd664;
 }
 
 .function {
-    -fx-fill: #d19a66; /* orange */
+    -fx-fill: #d19a66;
 }
 
 .string {
-    -fx-fill: #98c379; /* vert clair */
+    -fx-fill: #98c379;
 }
 
 .variable {
-    -fx-fill: #c678dd; /* violet vif */
+    -fx-fill: #c678dd;
 }
 
 .comment {
-    -fx-fill: #5c6370; /* gris bleuté */
+    -fx-fill: #5c6370;
 }

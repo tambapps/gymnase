@@ -11,6 +11,10 @@
     -fx-fill: #ce9178;
 }
 
+.annotation {
+    -fx-fill: #dcd664;
+}
+
 .number {
     -fx-fill: #6a99ff;
 }

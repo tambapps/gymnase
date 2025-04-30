@@ -15,14 +15,16 @@ class MarcelCodeHighlighter(replCompiler: MarcelReplCompiler) :
   companion object {
     const val DEFAULT_CLASS = "default"
     val THEME = HighlightTheme(
-      variable = listOf(DEFAULT_CLASS, "variable"),
+      field = listOf(DEFAULT_CLASS, "variable"),
       string = listOf(DEFAULT_CLASS, "string"),
       stringTemplate = listOf(DEFAULT_CLASS, "string_template"),
-      default = listOf("default"),
+      default = listOf(DEFAULT_CLASS),
       function = listOf(DEFAULT_CLASS, "function"),
       keyword = listOf(DEFAULT_CLASS, "keyword"),
       comment = listOf(DEFAULT_CLASS, "comment"),
       number = listOf(DEFAULT_CLASS, "number"),
+      variable = listOf(DEFAULT_CLASS),
+      annotation = listOf(DEFAULT_CLASS, "annotation"),
     )
   }
   override fun newBuilder(): StyleSpansBuilder<List<String>> = StyleSpansBuilder<List<String>>()
