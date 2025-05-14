@@ -4,8 +4,9 @@ import com.tambapps.marcel.gymnase.service.ExecutorServiceFactory
 import com.tambapps.marcel.gymnase.service.MarcelCodeHighlighterFactory
 import com.tambapps.marcel.gymnase.service.PreferencesManager
 import javafx.beans.value.ChangeListener
-import javafx.beans.value.ObservableValue
 import javafx.concurrent.Task
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
 import org.fxmisc.richtext.CodeArea
 import org.fxmisc.richtext.LineNumberFactory
 import org.fxmisc.richtext.model.StyleSpans
@@ -39,6 +40,34 @@ class MarcelCodeArea: CodeArea() {
     applyHighlighting(highlighter.highlight(text))
     setupCurrentLineHighlight()
     setupCodeHighlight()
+    addEventFilter(KeyEvent.KEY_PRESSED) { event ->
+      if (event.code == KeyCode.ENTER && !event.isShiftDown) {
+        autoIndentOnEnter()
+        event.consume()
+      }
+    }
+  }
+
+  private fun autoIndentOnEnter() {
+    // paragraph = line
+    val currentLineText = getParagraph(currentParagraph).text
+
+    // Find leading spaces or tabs on current line
+    var leadingSpacesCount = 0
+    while (leadingSpacesCount < currentLineText.length && (currentLineText[leadingSpacesCount].let { it == ' ' || it == '\t' })) {
+      leadingSpacesCount++
+    }
+
+    val currentLinePosition = caretColumn
+    if (currentLinePosition < currentLineText.length - 1) {
+      // If the cursor is not at the end of the line, we remove spaces AFTER the cursor (until the next text) so that there are no more spaces on the new line
+      val trailingSpacesCount = currentLineText.substring(currentLinePosition).takeWhile { it == ' ' || it == '\t' }.count()
+      if (trailingSpacesCount > 0) {
+        deleteText(caretPosition, caretPosition + trailingSpacesCount)
+      }
+    }
+    // Insert newline + same indent
+    insertText(caretPosition, System.lineSeparator() + " ".repeat(leadingSpacesCount))
   }
 
   private fun setupCodeHighlight(): Subscription {

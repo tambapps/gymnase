@@ -31,8 +31,6 @@ class GymnaseController: ListChangeListener<Tab> {
 
   @FXML
   private lateinit var tabPane: TabPane
-  // TODO move configuration things in specific controller,
-  //  and make preferencesManager return observable properties so that we listen to them directly in the marcel code area
   @FXML
   private lateinit var showLinesNumberMenuItem: CheckMenuItem
   @FXML
