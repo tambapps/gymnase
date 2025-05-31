@@ -38,6 +38,11 @@
     </dependency>
     <dependency>
       <groupId>com.tambapps.marcel</groupId>
+      <artifactId>marcel-csv</artifactId>
+      <version>${marcel.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.tambapps.marcel</groupId>
       <artifactId>marcel-json</artifactId>
       <version>${marcel.version}</version>
     </dependency>
