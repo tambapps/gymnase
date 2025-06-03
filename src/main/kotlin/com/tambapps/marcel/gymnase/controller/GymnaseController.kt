@@ -35,6 +35,7 @@ class GymnaseController: ListChangeListener<Tab> {
   private lateinit var showLinesNumberMenuItem: CheckMenuItem
   @FXML
   private lateinit var highlightSelectedLineMenuItem: CheckMenuItem
+  private val isStageReady get() = tabPane.scene != null
   private val stage: Stage
     get() = tabPane.scene.window as Stage
   private val currentTab: Tab
@@ -72,7 +73,7 @@ class GymnaseController: ListChangeListener<Tab> {
 
   @FXML
   fun newTab() {
-    tabPane.tabs.add(createTab())
+    addTab(createTab())
   }
 
   @FXML
@@ -80,8 +81,25 @@ class GymnaseController: ListChangeListener<Tab> {
     val fileChooser = newFileChooser()
     val file = fileChooser.showOpenDialog(stage) ?: return
     val newTab = createTab(file)
-    tabPane.tabs.add(newTab)
+    addTab(newTab)
     tabPane.selectionModel.select(newTab)
+  }
+
+  private fun addTab(tab: Tab) {
+    if (tabPane.tabs.size == 1 && tabPane.tabs.first() == currentTab
+      && tabControllerMap.getValue(currentTab).text.isBlank()) {
+      removeTab(currentTab)
+    }
+    tabPane.tabs.add(tab)
+    if (!isStageReady) {
+      return
+    }
+    if (tabPane.tabs.size == 1) {
+      val fileName = tabControllerMap[tab]?.fileName
+      stage.title = fileName ?: "Gymnase"
+    } else {
+      stage.title = "Gymnase"
+    }
   }
 
   @FXML
@@ -89,10 +107,13 @@ class GymnaseController: ListChangeListener<Tab> {
     if (tabPane.tabs.size <= 1) {
       Platform.exit()
     } else {
-      val currentTab = currentTab
-      tabControllerMap.remove(currentTab)
-      tabPane.tabs.remove(currentTab)
+      removeTab(currentTab)
     }
+  }
+
+  private fun removeTab(tab: Tab) {
+    tabControllerMap.remove(tab)
+    tabPane.tabs.remove(tab)
   }
 
   @FXML

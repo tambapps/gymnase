@@ -22,7 +22,7 @@ class MarcelCodeArea: CodeArea() {
   private val currentLineHighlightListener = ChangeListener<Int> { _, _, _ ->
     val currentParagraph = currentParagraph
     if (currentParagraph != lastLine) {
-      // Remove highlight from previous line
+      // Remove highlight from the previous line
       if (lastLine >= 0 && lastLine < paragraphs.size) {
         setParagraphStyle(lastLine, emptyList())
       }
@@ -36,8 +36,6 @@ class MarcelCodeArea: CodeArea() {
   init {
     initStyle()
     setupLinesNumberDisplay()
-    replaceText("fun void main() {\n    println(\"Hello, Marcel!\")\n}")
-    applyHighlighting(highlighter.highlight(text))
     setupCurrentLineHighlight()
     setupCodeHighlight()
     addEventFilter(KeyEvent.KEY_PRESSED) { event ->
@@ -79,7 +77,7 @@ class MarcelCodeArea: CodeArea() {
       .awaitLatest(multiPlainChanges())
       .filterMap { t ->
         if (t.isSuccess)
-          Optional.of(t.get())
+          Optional.ofNullable(t.get())
         else {
           t.failure.printStackTrace()
           Optional.empty()
@@ -88,12 +86,12 @@ class MarcelCodeArea: CodeArea() {
       .subscribe(this::applyHighlighting)
   }
 
-  private fun computeHighlightingAsync(): Task<StyleSpans<List<String>>> {
+  private fun computeHighlightingAsync(): Task<StyleSpans<List<String>>?> {
     val text: String = text ?: ""
-    val task: Task<StyleSpans<List<String>>> =
-      object : Task<StyleSpans<List<String>>>() {
-        protected override fun call(): StyleSpans<List<String>> {
-          return highlighter.highlight(text)
+    val task: Task<StyleSpans<List<String>>?> =
+      object : Task<StyleSpans<List<String>>?>() {
+        protected override fun call(): StyleSpans<List<String>>? {
+          return if (text.isNotEmpty()) highlighter.highlight(text) else null
         }
       }
     executor.execute(task)

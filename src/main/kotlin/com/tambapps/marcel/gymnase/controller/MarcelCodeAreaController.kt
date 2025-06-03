@@ -13,7 +13,11 @@ class MarcelCodeAreaController {
 
   private val stage: Stage
     get() = codeArea.scene.window as Stage
+  private val isStageReady get() = codeArea.scene != null
+
   private lateinit var tab: Tab
+  val text: String get() = codeArea.text
+  val fileName: String? get() = fileProperty.value?.name
   @FXML
   private lateinit var codeArea: MarcelCodeArea
   private val fileProperty = SimpleObjectProperty<File?>()
@@ -43,6 +47,9 @@ class MarcelCodeAreaController {
       file != null && dirty -> "${file.name}*"
       file != null && !dirty -> "${file.name}"
       else -> "Untitled"
+    }
+    if (isStageReady && tab.tabPane.tabs.size == 1) {
+      stage.title = tab.text
     }
   }
 
