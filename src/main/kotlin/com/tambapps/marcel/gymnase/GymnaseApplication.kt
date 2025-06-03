@@ -7,6 +7,7 @@ import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.Parent
 import javafx.scene.Scene
+import javafx.scene.image.Image
 import javafx.stage.Stage
 
 class GymnaseApplication : Application() {
@@ -15,6 +16,8 @@ class GymnaseApplication : Application() {
 
   override fun start(stage: Stage) {
     this.stage = stage
+    val icon = Image(javaClass.getResourceAsStream("icons/app-icon.png"))
+    stage.icons += icon
     val loader = FXMLLoader(GymnaseApplication::class.java.getResource("gymnase-view.fxml"))
     val root = loader.load<Parent>()
     val controller = loader.getController<GymnaseController>()
